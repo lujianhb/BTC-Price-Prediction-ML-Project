@@ -35,7 +35,7 @@ df = df.dropna()
 
 # Creating a copy for making small changes
 dataset_for_prediction = df.copy()
-dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift()
+dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift(-1)
 dataset_for_prediction=dataset_for_prediction.dropna()
 
 # date time typecast

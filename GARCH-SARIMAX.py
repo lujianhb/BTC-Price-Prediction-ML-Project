@@ -2,7 +2,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 import arch
 register_matplotlib_converters()
@@ -40,7 +39,7 @@ print(df.head())
 
 # making copy for making changes
 dataset_for_prediction = df.copy()
-dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift()
+dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift(-1)
 dataset_for_prediction=dataset_for_prediction.dropna()
 dataset_for_prediction['Date'] =pd.to_datetime(dataset_for_prediction['Date'])
 dataset_for_prediction.index= dataset_for_prediction['Date']
@@ -114,7 +113,7 @@ predictions.index=test_X.index
 predictions['Actual'] = act['BTC Price next day']
 predictions.rename(columns={'predicted_mean':'Pred'}, inplace=True)
 print(predictions)
-for i in range(len(predictions)) : 
+for i in range(len(predictions)) :
   predictions.iloc[i,0]= predictions.iloc[i,0]+predic_garch[i]
 
 

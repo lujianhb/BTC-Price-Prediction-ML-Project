@@ -35,7 +35,7 @@ df = df.dropna()
 
 # Creating a copy for making small changes
 dataset_for_prediction = df.copy()
-dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift()
+dataset_for_prediction['Actual']=dataset_for_prediction['Mean'].shift(-1)
 dataset_for_prediction=dataset_for_prediction.dropna()
 
 # date time typecast
@@ -101,8 +101,8 @@ testActual = sc_out.inverse_transform(predictions[['Actual']])
 
 # prediction plots
 plt.figure(figsize=(20,10))
-plt.plot(predictions.index, testActual, label='Pred', color='blue')
-plt.plot(predictions.index, testPredict, label='Actual', color='red')
+plt.plot(predictions.index, testActual, label='Actual', color='blue')
+plt.plot(predictions.index, testPredict, label='Pred', color='red')
 plt.legend()
 plt.show()
 
