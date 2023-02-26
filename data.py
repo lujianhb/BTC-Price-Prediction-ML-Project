@@ -5,27 +5,30 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 def get_data():
-    file_name = 'btc.csv'
+    file_name = 'btc_usdt.csv'
+    quote = 'USDT'
     if os.path.exists(file_name):
         df = pd.read_csv(file_name)
     else:
         url = "https://web-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
-        param = {"convert": "USD", "slug": "bitcoin", "time_end": "1601510400", "time_start": "1367107200"}
+        # param = {"convert": "USDT", "slug": "bitcoin", "time_end": "1601510400", "time_start": "1367107200"}
+        param = {"convert": quote, "slug": "bitcoin", "time_end": "1677422213", "time_start": "1367107200"}
         content = requests.get(url=url, params=param).json()
         df = pd.json_normalize(content['data']['quotes'])
         df.to_csv(file_name, index=False)
     # Extracting and renaming the important variables
-    df['Date'] = pd.to_datetime(df['quote.USD.timestamp']).dt.tz_localize(None)
-    df['Low'] = df['quote.USD.low']
-    df['High'] = df['quote.USD.high']
-    df['Open'] = df['quote.USD.open']
-    df['Close'] = df['quote.USD.close']
-    df['Volume'] = df['quote.USD.volume']
+    df['Date'] = pd.to_datetime(df[f'quote.{quote}.timestamp']).dt.tz_localize(None)
+    df['Low'] = df[f'quote.{quote}.low']
+    df['High'] = df[f'quote.{quote}.high']
+    df['Open'] = df[f'quote.{quote}.open']
+    df['Close'] = df[f'quote.{quote}.close']
+    df['Volume'] = df[f'quote.{quote}.volume']
 
     # Drop original and redundant columns
-    df = df.drop(columns=['time_open', 'time_close', 'time_high', 'time_low', 'quote.USD.low', 'quote.USD.high',
-                          'quote.USD.open', 'quote.USD.close', 'quote.USD.volume', 'quote.USD.market_cap',
-                          'quote.USD.timestamp'])
+    df = df.drop(
+        columns=['time_open', 'time_close', 'time_high', 'time_low', f'quote.{quote}.low', f'quote.{quote}.high',
+                 f'quote.{quote}.open', f'quote.{quote}.close', f'quote.{quote}.volume', f'quote.{quote}.market_cap',
+                 f'quote.{quote}.timestamp'])
     # Creating a new feature for better representing day-wise values
     # df['Mean'] = (df['Low'] + df['High']) / 2
     # Cleaning the data for any NaN or Null fields
@@ -45,5 +48,4 @@ def get_data():
     train_size = int(len(sc_df) * 0.9)
     train_X, train_y = x[:train_size], y[:train_size]
     test_X, test_y = x[train_size:], y[train_size:]
-    return {'trainx': train_X, 'trainy': train_y, 'testx': test_X, 'testy': test_y, 'sc_in': sc_in, 'df':df}
-
+    return {'trainx': train_X, 'trainy': train_y, 'testx': test_X, 'testy': test_y, 'sc_in': sc_in, 'df': df}

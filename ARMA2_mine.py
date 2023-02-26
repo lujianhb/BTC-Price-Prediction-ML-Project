@@ -34,6 +34,7 @@ class MARMA(MyModel):
         predictions = results.predict(start=self.trainsize,
                                       end=self.size - 1,
                                       exog=self.testx)
+        predictions = np.array(predictions)
         return predictions
 
 
@@ -47,6 +48,7 @@ class MAR(MyModel):
         train_size = len(datas['trainy'])
         test_size = len(datas['testy'])
         predictions = results.predict(start=train_size, end=train_size + test_size - 1)
+        predictions = np.array(predictions)
         return predictions
 
 

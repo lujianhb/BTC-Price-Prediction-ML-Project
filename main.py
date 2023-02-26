@@ -3,10 +3,10 @@ from data import get_data
 from ARMA2_mine import *
 
 datas = get_data()
-# model = MARMA(datas)
+model = MARMA(datas)
 # model = MAR(datas)
 # model = MARIMA(datas)
-model = MBayesian(datas)
+# model = MBayesian(datas)
 predictions = model.get_predictions()
 
 balances = []
